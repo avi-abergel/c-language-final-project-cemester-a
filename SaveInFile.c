@@ -43,4 +43,5 @@ void saveInfile() // saving snapshot information in a file
 			sindex=sindex->next;
 		}
 	}
+	fclose(f);
 }

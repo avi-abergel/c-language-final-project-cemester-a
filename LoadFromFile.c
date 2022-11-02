@@ -41,4 +41,5 @@ void LoadFromfile() // saving snpshot information un a file
 			
 		}
 	}
+	fclose(f);
 }
