@@ -1,8 +1,8 @@
 #include "generateHtml.h"
 
-#define seperator1 "[[[line1]]]"
-#define seperator2 "[[[line2]]]"
-#define seperator3 "[[[line3]]]"
+#define seperator1 "dll&process"
+#define seperator2 "snapData"
+#define seperator3 "dlls"
 
 
 
@@ -148,9 +148,11 @@ Process* processListUsingDll(Snapshot* sList, char dllName[500])
 
 
 
-char* ReadAllFile(char* fileName)
+
+void generateHomePage(Snapshot* snapHead)
 {
-	FILE* f = fopen(fileName, "r");
+	DLL* listDll;
+	FILE* f = fopen("homepage.html", "w");
 	if (!f)
 	{
 		LogError("file not found");
@@ -158,19 +160,78 @@ char* ReadAllFile(char* fileName)
 	}
 	else
 	{
-		char* buff = (char*)malloc(1000);
-		char* read;
-		int FileSize = 0;
-		while (read = fgets(buff, 1000, f));
+		fputs("<!DOCTYPE html><html lang= \"en\"><head><meta charset = \"UTF-8\" \/ ><meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" / ><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\" \/ ><title>Document< \/ title>< \/ head><body><nav class = \"homepage-navbar\">< ul>", f);
+		Snapshot* SnapIndex = snapHead;
+		int sumDll = 0;
+		while (SnapIndex != null)
 		{
-			FileSize += strlen(buff);
+			listDll = dictionary(snapIndex);
+			int dllCount = 0;
+			while (listDll != NULL)
+			{
+				dllCount++;
+				listDll = listDll->next;
+			}
+			sumDll = +dllCount;
+			SnapIndex = SnapIndex->next;
 		}
-		free(buff);
+		SnapIndex = snapHead;
+		int sumPrc = 0;
+		while (SnapIndex != NULL)
+		{
+			sumPrc += SnapIndex->tailprocess->position;
+			SnapIndex = SnapIndex->next;
+		}
+		char* navcounts;
+		sprintf(navcounts, " <li>dll count: %d</li>< li > process count : % d < / li>", sumDll, sumPrc);
+		fputs(navcounts, f);
+		fputs(" <li><a href="">homepage</a></li>< li > <a href = "">about< / a>< / li>< / ul>< / nav>	<h1>snapshots list< / h1>	<table class = \"snapshots-table\"><th><td>snapshot< / td><td>link< / td><td>dll count< / td>	<td>memory avg< / td>	< / th>");
+		char* snapNum;
+		char* numDlls;
+		char* memoryAvg;
+		SnapIndex = snapHead;
+		while (SnapIndex != null)
+		{
+			sprintf(snapnum, " <tr><td> % d< / td>", SnapIndex->position);
+			fputs(snapNum, f);
+			Process* prcIndex = SnapIndex->headprocess;
+			int dllsum = 0;
+			int memorysum = 0;
+			while (prcIndex != null)
+			{
+				dllsum += prcIndex->tailDLL->position;
+				memorysum = memorysum + prcIndex->process_data.WorkingSetSize;
+				prcIndex = prcIndex->next;
+			}
+			sprintf(numDlls, " <td><a href=""></a></td>< td > % d < / td>", dllsum);
+			int memoryavg = memorysum / SnapIndex->tailprocess->position;
+			sprintf(memoryAvg, "<td>%d</td>< / tr > ", memoryavg);
+			fputs(numDlls, f);
+			fputs(memoryAvg, f);
+			SnapIndex = SnapIndex->next;
+		}
+		fputs("</table>< h1 > dlls list< / h1><table class = \"dlls-table\"><th><td>dll name< / td><td>link< / td>< / th>");
+		SnapIndex = snapHead;
+		while (SnapIndex != NULL)
+		{
+			listDll = dictionary(SnapIndex);
+			while (listDll != null)
+			{
+				char* DLLs;
+				sprintf(DLLs, "<tr>< td > % s< / td><td><a href = "">< / a>< / td>< / tr>", listDll->dllName);
+				listDll = listDll->next;
+			}
+			SnapIndex = SnapIndex->next;
+		}
+		fputs("</table>< / body >< / html>", f);
 		fclose(f);
-		FileSize++;
-		
-		buff = malloc(sizeof(FileSize));
-		f = fopen(fileName, "r");
+	}
+}
+
+	
+	void generateSnapshotPage(Snapshot * snapHead)
+	{
+		FILE* f = fopen("snapshot.html", "w");
 		if (!f)
 		{
 			LogError("file not found");
@@ -178,28 +239,67 @@ char* ReadAllFile(char* fileName)
 		}
 		else
 		{
-			int position = 0;
-			char charToRead;
-			while (charToRead = fgetc(f) != EOF)
+			fputs("<!DOCTYPE html>< html lang = \"en\" ><head><meta charset = \"UTF-8\" / ><meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" / ><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\" / ><title>Document< / title>	< / head><body><nav class = \"snapshot-navbar\"><ul><li><a href = "">home< / a>< / li><li><a href = "">about me< / a>< / li>< / ul>< / nav>",f);
+			char* title;
+			sprintf(title, "<h1>snapshot number %d taken at %s</h1>", snapHead->position, snapHead->time);
+			fputs("<h3>process list</h3>< table class = \"snapshot-data\" ><th><td>process name< / td><td>page fault count< / td><td>working set size< / td><td>quota paged pool usage< / td><td>quota peaked paged pool usage< / td><td>page file usage< / td><td>process ID< / td><td>dlls amount< / td><td>dlls list< / td>< / th>", f);
+			Process* prcIndex = snapHead->headprocess;
+			while (prcIndex != null)
 			{
-				buff(position) = charToRead;
-				position++;
+				char* processData;
+				sprintf(processData, "<tr>< td > % s< / td><td> % lu< / td><td> % zu< / td><td> % zu< / td><td> % zu< / td><td> % zu< / td><td> % lu< / td><td> % d < / td>", prcIndex->ProcessName, prcIndex->process_data.PageFaultCount, prcIndex->process_data.WorkingSetSize, prcIndex->process_data.QuotaPagedPoolUsage, prcIndex->process_data.QuotaPeakPagedPoolUsage, prcIndex->ProcessId);
+				fputs("<td class=\"dropdown\"><div class=\"dropdown - content\">", f);
+				DLL* dllIndex = prcIndex->headDLL;
+				while (dllIndex != NULL)
+				{
+					char* dlls;
+					sprintf(dlls, " <span>%s</span>", dllIndex->dllName);
+					fputs(dlls, f);
+					dllIndex = dllIndex->next;
+				}
+				prcIndex = prcIndex->next;
+
 			}
-			buff(position) = NULL;
+			fputs(" </div></td>< / tr >< / table>< / body>< / html>", f);
+		}
+		fclose(f);
+
+	}
+
+	void generateDllPage(Snapshot* snapHead,char dllName[500])
+	{
+		FILE* f = fopen("DLL.html", "w");
+		if (!f)
+		{
+			LogError("file not found");
+			return;
+		}
+		else
+		{
+			fputs("<!DOCTYPE html>< html lang = \"en\" ><head>	<meta charset = \"UTF-8\" / ><meta http - equiv = \"X-UA-Compatible\" content = \"IE=edge\" / ><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\" / ><title>Document< / title>< / head><body><nav class = \"snapshot-navbar\"><ul><li><a href = "">home< / a>< / li><li><a href = "">about me< / a>< / li>< / ul>< / nav>", f);
+			Process* prcList=processListUsingDll(snapHead, dllName);
+			int prcCount = 0;
+			while (prcList != NULL)
+			{
+				prcCount++;
+				prcList = prcList->next;
+			}
+			while (prcList != null)
+			{
+				prcList = prcList->prev;
+			}
+			char* title;
+			sprintf(title, " <h1>%d processes used %s</h1>", prcCount, dllName);
+			fputs(title, f);
+			fputs("<table>< th ><td>process ID< / td><td>process name< / td>< / th>", f);
+			char* prcData;
+			while (prcList != null)
+			{
+				sprintf(prcData, "<tr>< td > % lu< / td><td> % s< / td>< / tr>", prcList->ProcessId, prcList->ProcessName);
+				fputs(prcData, f);
+				prcList = prcList->next;
+			}
+			fputs("</table>< / body >	< / html>", f);
 			fclose(f);
-			return buff;
 		}
 	}
-}
-
-
-
-
-void generateHomePage(char* seperator)
-{
-	char* replaceHtml = seperator;
-	char* template = ReadAllFile("C:\\Users\\97252\\source\\repos\\project_2_Final\\project_2_Final\\project-homepage.html");
-	char* findToken = strstr(template, seperator);
-	int len = findToken - template;
-	char* newFile=(char*)malloc()
-}
