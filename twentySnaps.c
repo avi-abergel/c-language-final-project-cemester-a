@@ -33,11 +33,11 @@ void twentySnaps()
 				{
 					mainPrcListIndex->process_data.QuotaPeakPagedPoolUsage = mainPrcListIndex->process_data.QuotaPeakPagedPoolUsage + secPrcListIndex->process_data.QuotaPagedPoolUsage;
 				}
-				mainPrcListIndex= mainPrcListIndex->next;
-				secPrcListIndex= secPrcListIndex->next;
+				mainPrcListIndex = mainPrcListIndex->next;
+				secPrcListIndex = secPrcListIndex->next;
 			}
 		}
-		mainPrcListIndex= mainSnap->headprocess;
+		mainPrcListIndex = mainSnap->headprocess;
 		Sleep(1000); // 1 sec pause
 	}
 }

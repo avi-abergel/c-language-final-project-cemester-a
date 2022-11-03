@@ -37,7 +37,7 @@ void addProcess(Process prc) //adding new process struct to a linked list
 
 void swapPrc(Process* prc)  //swaping items in list
 {
-	int positionSwap=0;
+	int positionSwap = 0;
 	if (prc == NULL)
 	{
 		return;

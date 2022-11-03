@@ -13,13 +13,13 @@ void LogError(char message[100])
 	char FileName[100];
 	sprintf(FileName, "myprog-%d%d%d.txt", timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday);
 	FILE* f = fopen(FileName, "a");
-	if (f==NULL)
+	if (f == NULL)
 	{
 		printf("ERROR!- file not found");
 		return 0;
 	}
 	else {
-		fputs(finalMessage,f);
+		fputs(finalMessage, f);
 		fclose(f);
 	}
 }

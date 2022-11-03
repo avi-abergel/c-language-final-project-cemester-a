@@ -19,7 +19,7 @@ main()
 			break;
 		case 3:longSnapshot();
 			break;
-		case 4:printf("4");
+		case 4:generateHtmlReport(Shead);
 			break;
 		case 5:freeMemory();
 			break;
@@ -27,14 +27,12 @@ main()
 			break;
 		case 7:LoadFromfile();
 			break;
-		case 8:
-			break;
 		}
 		printf("Hello! please choose an option:\n1-take one snapshot\n2-take 20 snapshots\n3-start a long snapshot\n4-generate HTML report\n5-reset collection\n6-save in file\n7-load from file\n8-QUIT\n");
 		scanf("%d", &userResponse);
 	}
 
-	 
+
 	printf("GOODBYE!");
 	return 0;
 }
