@@ -109,9 +109,8 @@ void sort() //bubble sort
 		change = 0;
 		while (curr != NULL)
 		{
-			if (curr->next != NULL && curr->tailDLL->position > curr->next->tailDLL->position)
+			if (curr->next != NULL && curr->tailDLL->position> curr->next->tailDLL->position)
 			{
-
 				swapPrc(curr);
 				change++;
 			}

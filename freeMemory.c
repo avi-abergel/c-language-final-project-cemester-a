@@ -8,16 +8,16 @@ void freeMemory()
 	while (Sindex != NULL) //freeing snapshots list
 	{
 		free(Sindex);
-		Sindex = Sindex++;
+		Sindex = Sindex->next;
 	}
 	while (Pindex != NULL) //freeing processes list
 	{
 		free(Pindex);
-		Pindex = Pindex++;
+		Pindex = Pindex->next;
 	}
 	while (Dindex != NULL) //freeing dlls list
 	{
 		free(Dindex);
-		Dindex = Dindex++;
+		Dindex = Dindex->next;
 	}
 }

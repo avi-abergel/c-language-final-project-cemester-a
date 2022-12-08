@@ -19,8 +19,8 @@ int searchByName(char name[500], DLL* dllHead)
 				return 0;
 			}
 			curr = curr->next;
-			return 1;
 		}
+		return 1;
 	}
 }
 
@@ -37,34 +37,23 @@ DLL* dictionary(Snapshot* snpHead)
 			DLL* dllIndex = prcIndex->headDLL;
 			while (dllIndex != NULL)
 			{
-				if ((searchByName(dllIndex->dllName, dllIndex)) != 0)
+				if (strcmp(secDllListIndex->dllName, mainDllListIndex->dllName) == 0)
 				{
-					DLL* curr = (DLL*)malloc(sizeof(DLL));
-					if (!curr) //allocation check
-					{
-						LogError(strerror(GetLastError()));   //log
-						return;
-					}
-					strcpy(curr->dllName, dllIndex->dllName);
-					curr->prev = NULL;
-					curr->next = NULL;
-					if (dictionaryHead == NULL)
-					{
-						dictionaryHead == curr;
-					}
-					else
-					{
-						DLL* dictionaryTail = dictionaryHead;
-						while (dictionaryTail->next != NULL)
-						{
-							dictionaryTail = dictionaryTail->next;
-						}
-						dictionaryTail->next = curr;
-						curr->prev = dictionaryHead;
-						dictionaryTail = curr;
-					}
+					mainDllListIndex = mainDllListIndex->next;
 				}
-				dllIndex = dllIndex->next;
+				else if (strcmp(secDllListIndex->dllName, mainDllListIndex->dllName) != 0) // if they do not exist, add a new dll structure with the data of the new dll to the main snapshots dlls list.
+				{
+					if (mainDllListIndex->next == NULL)
+					{
+						DLL* curr = (DLL*)malloc(sizeof(DLL));
+						strcpy(curr->dllName, secDllListIndex->dllName);
+						curr->position = secDllListIndex->position;
+						curr->next = NULL;
+						curr->prev = mainPrcListIndex->tailDLL;
+						mainPrcListIndex->tailDLL->next = curr;
+					}
+					mainDllListIndex = mainDllListIndex->next;
+				}
 			}
 			prcIndex = prcIndex->next;
 		}
@@ -79,7 +68,7 @@ Process* processListUsingDll(Snapshot* sList, char dllName[500])
 	Snapshot* snapIndex = sList;
 	Process* dictionaryHead = NULL;
 
-	//Log_Event("Building proccess list based on dictionaty.\n");
+	/*Log_Event("Building proccess list based on dictionaty.\n");*/
 
 	while (snapIndex != NULL)
 	{
@@ -180,7 +169,7 @@ void generateHomePage(Snapshot* snapHead)
 			SnapIndex = SnapIndex->next;
 		}
 		char navcounts[1000];
-		sprintf(navcounts, " <li>dll count: %d</li>< li > process count : % d < / li>", sumDll, sumPrc);
+		sprintf(navcounts, "<li>dll count:%d</li><li>process count:%d</li>", sumDll, sumPrc);
 		fputs(navcounts, f);
 		char insert1[300]= "<li><a href=\"homepage.html\">home</a></li><li><a href=\"aboutMe.html\">about me</a></li></ul></nav><h1>snapshotslist</h1><tableclass=\"snapshots-table\"><th><td>snapshot</td><td>link</td><td>dll count</td><td>memory avg</td></th>";
 		fputs(insert1, f);
@@ -339,5 +328,6 @@ void generateHtmlReport(Snapshot* snp)
 		char aboutMe [1000]= "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\"/>\n<meta http-equiv=\"X-UA-Compatible\"content=\"IE=edge\"/>\n<meta name=\"viewport\"content=\"width=device-width,initial-scale=1.0\"/>\n<title>Document</title>\n<link rel=\"stylesheet\"href=\"project-style.css\"/>\n</head>\n<body>\n<nav class=\"navbar\">\n<ul>\n<li><a href=\"homepage.html\">home</a></li>\n<li><a href=\"aboutMe.html\">about me</a></li>\n</ul>\n</nav>\n<div class=\"picture\"><img src=\"158839942_139041001891327_8709820587880628529_n.jpg\"alt=\"my picture\"/>\n</div>\n<div class =\"details\">\n<ul>\n<h2>avi abergel</h2>\n<li>24 years old</li>\n<li>\nborn in bet shemesh, israel.lives in zur hadassah israel. currentlystudying to be a full stack developer at\"level up\"course by zionet.\n</li><li><a href=\"https://github.com/avi-abergel\">my github</a></li><li>\n<a href=\"https://www.youtube.com/shorts/WCXI1KRgjck\">favourite youtube video</a></li>\n</ul>\n</div>\n</body>\n</html>";
 		fputs(aboutMe, f);
 		fclose(f);
+
 	}
 }
